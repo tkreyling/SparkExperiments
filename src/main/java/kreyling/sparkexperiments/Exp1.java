@@ -46,7 +46,7 @@ public class Exp1 {
         JavaRDD<String> knowledge = sc.textFile("src/main/resources/knowledge.csv");
 
         JavaPairRDD<Integer, Person> personsWithId = persons.mapToPair(p -> new Tuple2(p.id, p));
-        JavaPairRDD<Integer, String> knowledgeWithId = knowledge.mapToPair(line -> new Tuple2(Integer.parseInt(line.split(",")[0]), line.split(",")[1]));
+        JavaPairRDD<Integer, String> knowledgeWithId = knowledge.map(s -> s.split(",")).mapToPair(line -> new Tuple2(Integer.parseInt(line[0]), line[1]));
 
         persons.collect().forEach(System.out::println);
         knowledge.collect().forEach(System.out::println);
