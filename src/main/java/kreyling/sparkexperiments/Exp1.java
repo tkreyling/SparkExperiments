@@ -1,5 +1,6 @@
 package kreyling.sparkexperiments;
 
+import com.google.common.base.Optional;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.spark.SparkConf;
@@ -9,8 +10,6 @@ import org.apache.spark.api.java.JavaSparkContext;
 import scala.Tuple2;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.List;
 
 public class Exp1 {
 
@@ -52,6 +51,16 @@ public class Exp1 {
         persons.collect().forEach(System.out::println);
         knowledge.collect().forEach(System.out::println);
 
-        personsWithId.leftOuterJoin(knowledgeWithId).collect().forEach(System.out::println);
+        JavaPairRDD<Integer, Tuple2<Person, Optional<String>>> personsWithKnowledge =
+                personsWithId.leftOuterJoin(knowledgeWithId);
+
+        JavaPairRDD<Integer, Tuple2<Person, Optional<String>>> cachedPersonsWithKnowledge = personsWithKnowledge.cache();
+
+        cachedPersonsWithKnowledge.collect().forEach(System.out::println);
+
+        JavaPairRDD<Integer, Tuple2<Person, Optional<Iterable<String>>>> personsWithListOfKnowledge =
+                personsWithId.leftOuterJoin(knowledgeWithId.groupByKey());
+
+        personsWithListOfKnowledge.collect().forEach(System.out::println);
     }
 }
