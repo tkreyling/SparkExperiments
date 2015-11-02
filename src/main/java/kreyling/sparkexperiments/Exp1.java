@@ -36,11 +36,9 @@ public class Exp1 {
     }
 
     public static void main(String[] args) {
+        long start = System.currentTimeMillis();
         SparkConf conf = new SparkConf().setAppName("Exp1").setMaster("local");
         JavaSparkContext sc = new JavaSparkContext(conf);
-
-        //List<Integer> data = Arrays.asList(1,2,3,4,5);
-        //JavaRDD<Integer> distData = sc.parallelize(data);
 
         JavaRDD<Person> persons = sc.textFile("src/main/resources/persons.csv").map(Person::fromCsv);
         JavaRDD<String> knowledge = sc.textFile("src/main/resources/knowledge.csv");
@@ -51,16 +49,12 @@ public class Exp1 {
         persons.collect().forEach(System.out::println);
         knowledge.collect().forEach(System.out::println);
 
-        JavaPairRDD<Integer, Tuple2<Person, Optional<String>>> personsWithKnowledge =
-                personsWithId.leftOuterJoin(knowledgeWithId);
-
-        JavaPairRDD<Integer, Tuple2<Person, Optional<String>>> cachedPersonsWithKnowledge = personsWithKnowledge.cache();
-
-        cachedPersonsWithKnowledge.collect().forEach(System.out::println);
-
         JavaPairRDD<Integer, Tuple2<Person, Optional<Iterable<String>>>> personsWithListOfKnowledge =
                 personsWithId.leftOuterJoin(knowledgeWithId.groupByKey());
 
         personsWithListOfKnowledge.collect().forEach(System.out::println);
+        long end = System.currentTimeMillis();
+
+        System.out.println(end - start);
     }
 }
