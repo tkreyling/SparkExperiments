@@ -24,12 +24,12 @@ public class Exp1 {
     public static class KnowledgeItem extends BaseDto {
         public final int personId;
         public final String name;
-        public final String grade;
+        public final String level;
 
-        public KnowledgeItem(int personId, String name, String grade) {
+        public KnowledgeItem(int personId, String name, String level) {
             this.personId = personId;
             this.name = name;
-            this.grade = grade;
+            this.level = level;
         }
 
         public static KnowledgeItem fromCsv(String csvLine) {
