@@ -1,5 +1,7 @@
 package kreyling.sparkexperiments;
 
+import lombok.AllArgsConstructor;
+import lombok.Value;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.spark.SparkConf;
@@ -21,16 +23,12 @@ public class Exp1 {
         }
     }
 
+    @Value
+    @AllArgsConstructor
     public static class KnowledgeItem extends BaseDto {
-        public final int personId;
-        public final String name;
-        public final String level;
-
-        public KnowledgeItem(int personId, String name, String level) {
-            this.personId = personId;
-            this.name = name;
-            this.level = level;
-        }
+        int personId;
+        String name;
+        String level;
 
         public static KnowledgeItem fromCsv(String csvLine) {
             String[] attributes = csvLine.split(",");
@@ -38,20 +36,14 @@ public class Exp1 {
         }
     }
 
+    @Value
+    @AllArgsConstructor
     public static class Person extends BaseDto {
         public final int id;
         public final String forename;
         public final String surname;
         public final Iterable<KnowledgeItem> knowledge;
         public final Iterable<String> interests;
-
-        public Person(int id, String forename, String surname, Iterable<KnowledgeItem> knowledge, Iterable<String> interests) {
-            this.id = id;
-            this.forename = forename;
-            this.surname = surname;
-            this.knowledge = knowledge;
-            this.interests = interests;
-        }
 
         public static Person enrichWithKnowledge(Person person, Iterable<KnowledgeItem> knowledge) {
             return new Person(person.id, person.forename, person.surname, knowledge, person.interests);
