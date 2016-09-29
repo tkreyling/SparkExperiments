@@ -64,6 +64,10 @@ public class Exp1 {
     }
 
     public static void main(String[] args) throws InterruptedException {
+        if (System.getProperty("os.name").contains("Windows")) {
+            System.setProperty("hadoop.home.dir", "C:\\winutil\\");
+        }
+
         long start = System.currentTimeMillis();
         SparkConf conf = new SparkConf().setAppName("Exp1").setMaster("local");
         JavaSparkContext sc = new JavaSparkContext(conf);
