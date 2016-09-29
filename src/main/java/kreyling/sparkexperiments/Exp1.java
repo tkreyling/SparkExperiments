@@ -2,8 +2,6 @@ package kreyling.sparkexperiments;
 
 import lombok.AllArgsConstructor;
 import lombok.Value;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.spark.Dependency;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -19,6 +17,8 @@ import java.io.Serializable;
 import java.util.Collections;
 
 public class Exp1 {
+
+    public static final String RESOURCE_PATH = "./";
 
     @Value
     @AllArgsConstructor
@@ -62,12 +62,20 @@ public class Exp1 {
         }
 
         long start = System.currentTimeMillis();
-        SparkConf conf = new SparkConf().setAppName("Exp1").setMaster("local");
+
+        SparkConf conf = new SparkConf()
+                .setAppName(Exp1.class.getSimpleName())
+                .set("spark.hadoop.validateOutputSpecs", "false") // Overwrite output files
+                .set("spark.executor.uri", "http://10.89.0.96:8888/spark-2.0.0-bin-hadoop2.7.tgz"); //Download spark binaries from here
+
         JavaSparkContext sc = new JavaSparkContext(conf);
 
-        JavaRDD<Person> persons = sc.textFile("src/main/resources/kreyling/sparkexperiments/persons.csv").map(Person::fromCsv);
-        JavaRDD<KnowledgeItem> knowledge = sc.textFile("src/main/resources/kreyling/sparkexperiments/knowledge.csv").map(KnowledgeItem::fromCsv);
-        JavaRDD<String[]> interests = sc.textFile("src/main/resources/kreyling/sparkexperiments/interests.csv").map(s -> s.split(","));
+        JavaRDD<Person> persons = sc.textFile(RESOURCE_PATH +
+                "persons.csv").map(Person::fromCsv);
+        JavaRDD<KnowledgeItem> knowledge = sc.textFile(RESOURCE_PATH +
+                "knowledge.csv").map(KnowledgeItem::fromCsv);
+        JavaRDD<String[]> interests = sc.textFile(RESOURCE_PATH +
+                "interests.csv").map(s -> s.split(","));
 
         JavaPairRDD<Integer, Person> personsWithId = persons.mapToPair(p -> new Tuple2<>(p.id, p));
         JavaPairRDD<Integer, KnowledgeItem> knowledgeWithId = knowledge.mapToPair(k -> new Tuple2<>(k.personId, k));
@@ -79,7 +87,8 @@ public class Exp1 {
         RDD<Tuple2<Integer, Person>> rdd = personsWithId.rdd();
         printRdd(rdd, "");
 
-        personsWithId.map(t -> t._2.toString()).saveAsTextFile("src/main/resources/kreyling/sparkexperiments/persons.txt");
+        personsWithId.map(t -> t._2.toString()).saveAsTextFile(RESOURCE_PATH +
+                "persons.txt");
         personsWithId.collect().forEach(System.out::println);
         long end = System.currentTimeMillis();
 
