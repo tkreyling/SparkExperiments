@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<enums domain="cis.CounterpartyType">
+	<enum key="Sovereign"></enum>
+	<enum key="Financial Institution"></enum>
+	<enum key="Local Government Authority"></enum>
+	<enum key="Corporation"></enum>
+	<enum key="Government Related Corporation"></enum>
+	<enum key="Infrastructure Project"></enum>
+	<enum key="Other"></enum>
+	<enum key="Public Sector Enterprise"></enum>
+	<enum key="n/a"></enum>
+	<enum key="Government Related Institution"></enum>
+	<enum key="Insurance"></enum>
+</enums>

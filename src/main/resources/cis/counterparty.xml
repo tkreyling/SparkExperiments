@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<counterparties>
+    <counterparty>
+        <id>DEUBA_456234</id>
+        <name>Deutsche Bank</name>
+        <type>Financial Institution</type>
+        <ratings>
+            <rating>
+                <grade>Aaa</grade>
+                <type>Moody</type>
+                <validFrom>2016-03-28</validFrom>
+                <validTo>2016-10-28</validTo>
+            </rating>
+            <rating>
+                <grade>AA+</grade>
+                <type>Fitch</type>
+                <validFrom>2016-05-12</validFrom>
+                <validTo>2016-11-12</validTo>
+            </rating>
+        </ratings>
+    </counterparty>
+    <counterparty>
+        <id>COBADEFF_877239</id>
+        <name>Commerzbank</name>
+        <type>Financial Institution</type>
+        <ratings>
+            <rating>
+                <grade>Aa2</grade>
+                <type>Moody</type>
+                <validFrom>2016-01-07</validFrom>
+                <validTo>2016-12-01</validTo>
+            </rating>
+            <rating>
+                <grade>AA-</grade>
+                <type>Fitch</type>
+                <validFrom>2016-03-14</validFrom>
+                <validTo>2016-12-12</validTo>
+            </rating>
+        </ratings>
+    </counterparty>
+</counterparties>

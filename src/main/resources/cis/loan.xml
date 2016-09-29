@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<loan>
+    <id>535346</id>
+    <startDate>2015-10-01</startDate>
+    <endDate>2020-10-07</endDate>
+    <countpartyId>DEUBA_456234</countpartyId>
+    <committment>
+        <amount>546656.46</amount>
+        <currency>EUR</currency>
+    </committment>
+    <undrawn>
+        <amount>189376.26</amount>
+        <currency>EUR</currency>
+    </undrawn>
+    <drawings>
+        <drawing>
+            <id>75757</id>
+            <outstanding>
+                <amount>23957.88</amount>
+                <currency>EUR</currency>
+            </outstanding>
+            <startDate>2015-10-08</startDate>
+            <endDate>2018-10-07</endDate>
+        </drawing>
+        <drawing>
+            <id>757233</id>
+            <outstanding>
+                <amount>123322.32</amount>
+                <currency>EUR</currency>
+            </outstanding>
+            <startDate>2016-06-08</startDate>
+            <endDate>2020-10-07</endDate>
+        </drawing>
+    </drawings>
+</loan>
