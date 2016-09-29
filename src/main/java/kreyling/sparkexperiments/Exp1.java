@@ -82,6 +82,7 @@ public class Exp1 {
         RDD<Tuple2<Integer, Person>> rdd = personsWithId.rdd();
         printRdd(rdd, "");
 
+        personsWithId.map(t -> t._2.toString()).saveAsTextFile("src/main/resources/kreyling/sparkexperiments/persons.txt");
         personsWithId.collect().forEach(System.out::println);
         long end = System.currentTimeMillis();
 
