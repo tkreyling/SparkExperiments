@@ -12,7 +12,7 @@ import scala.Tuple2;
 import java.io.Serializable;
 import java.util.Collections;
 
-public class Exp1 {
+public class Exp2 {
 
     public abstract static class BaseDto implements Serializable {
         @Override
@@ -67,7 +67,7 @@ public class Exp1 {
         }
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         long start = System.currentTimeMillis();
         SparkConf conf = new SparkConf().setAppName("Exp1").setMaster("local");
         JavaSparkContext sc = new JavaSparkContext(conf);
@@ -80,25 +80,20 @@ public class Exp1 {
         JavaPairRDD<Integer, KnowledgeItem> knowledgeWithId = knowledge.mapToPair(k -> new Tuple2<>(k.personId, k));
         JavaPairRDD<Integer, String> interestsWithId = interests.mapToPair(line -> new Tuple2<>(Integer.parseInt(line[0]), line[1]));
 
-        personsWithId = leftOuterJoinList(personsWithId, knowledgeWithId, Person::enrichWithKnowledge);
-        personsWithId = leftOuterJoinList(personsWithId, interestsWithId, Person::enrichWithInterests);
+        personsWithId = personsWithId
+                .leftOuterJoin(knowledgeWithId.groupByKey())
+                .mapValues(tuple1 -> Person.enrichWithKnowledge(tuple1._1(), tuple1._2().or(Collections.emptyList())));
+        personsWithId = personsWithId
+                .leftOuterJoin(interestsWithId.groupByKey())
+                .mapValues(tuple -> Person.enrichWithInterests(tuple._1(), tuple._2().or(Collections.emptyList())));
 
+        System.out.println(personsWithId.rdd().getCreationSite());
         System.out.println(personsWithId.toDebugString());
 
         personsWithId.collect().forEach(System.out::println);
         long end = System.currentTimeMillis();
 
         System.out.println(end - start);
-
-        Thread.sleep(10000);
     }
 
-    private static <K, L, R> JavaPairRDD<K, L> leftOuterJoinList(
-            JavaPairRDD<K, L> leftItems,
-            JavaPairRDD<K, R> rightItems,
-            Function2<L, Iterable<R>, L> copyConstructor) {
-        return leftItems
-                .leftOuterJoin(rightItems.groupByKey())
-                .mapValues(tuple -> copyConstructor.call(tuple._1(), tuple._2().or(Collections.emptyList())));
-    }
 }
