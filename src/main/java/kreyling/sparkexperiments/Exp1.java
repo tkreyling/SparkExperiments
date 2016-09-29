@@ -4,12 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.spark.Dependency;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function2;
+import org.apache.spark.rdd.RDD;
 import scala.Tuple2;
+import scala.collection.Iterator;
+import scala.collection.Seq;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -75,7 +79,8 @@ public class Exp1 {
         personsWithId = leftOuterJoinList(personsWithId, knowledgeWithId, Person::enrichWithKnowledge);
         personsWithId = leftOuterJoinList(personsWithId, interestsWithId, Person::enrichWithInterests);
 
-        System.out.println(personsWithId.toDebugString());
+        RDD<Tuple2<Integer, Person>> rdd = personsWithId.rdd();
+        printRdd(rdd, "");
 
         personsWithId.collect().forEach(System.out::println);
         long end = System.currentTimeMillis();
@@ -83,6 +88,21 @@ public class Exp1 {
         System.out.println(end - start);
 
         Thread.sleep(10000);
+    }
+
+    private static void printRdd(RDD<?> rdd, String indent) {
+        System.out.println(indent + " *-" + rdd);
+
+        Seq<Dependency<?>> dependencies = rdd.getDependencies();
+        Iterator<Dependency<?>> iterator = dependencies.iterator();
+        while (iterator.hasNext()) {
+            Dependency<?> dependency = iterator.next();
+            if (iterator.hasNext()) {
+                printRdd(dependency.rdd(), indent + " | ");
+            } else {
+                printRdd(dependency.rdd(), indent + "   ");
+            }
+        }
     }
 
     private static <K, L, R> JavaPairRDD<K, L> leftOuterJoinList(
