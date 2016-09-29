@@ -20,16 +20,9 @@ import java.util.Collections;
 
 public class Exp1 {
 
-    public abstract static class BaseDto implements Serializable {
-        @Override
-        public String toString() {
-            return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
-        }
-    }
-
     @Value
     @AllArgsConstructor
-    public static class KnowledgeItem extends BaseDto {
+    public static class KnowledgeItem implements Serializable {
         int personId;
         String name;
         String level;
@@ -42,7 +35,7 @@ public class Exp1 {
 
     @Value
     @AllArgsConstructor
-    public static class Person extends BaseDto {
+    public static class Person implements Serializable {
         public final int id;
         public final String forename;
         public final String surname;
