@@ -67,7 +67,7 @@ public class Exp1 {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         long start = System.currentTimeMillis();
         SparkConf conf = new SparkConf().setAppName("Exp1").setMaster("local");
         JavaSparkContext sc = new JavaSparkContext(conf);
@@ -89,6 +89,8 @@ public class Exp1 {
         long end = System.currentTimeMillis();
 
         System.out.println(end - start);
+
+        Thread.sleep(10000);
     }
 
     private static <K, L, R> JavaPairRDD<K, L> leftOuterJoinList(
