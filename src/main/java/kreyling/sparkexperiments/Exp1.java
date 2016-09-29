@@ -18,7 +18,7 @@ import java.util.Collections;
 
 public class Exp1 {
 
-    public static final String RESOURCE_PATH = "./";
+    public static final String RESOURCE_PATH = "/Applications/mesos-1.0.1/share/";
 
     @Value
     @AllArgsConstructor

@@ -20,7 +20,7 @@ import java.util.Collections;
  */
 public class CounterPartyImporter {
 
-    public static final String RESOURCE_PATH = "./";
+    public static final String RESOURCE_PATH = "/Applications/mesos-1.0.1/share/";
 
     public static void main(String[] args) {
 
@@ -36,7 +36,7 @@ public class CounterPartyImporter {
         JavaRDD<Rating> rating = sc.textFile(RESOURCE_PATH +
                 "rating.csv").map(Rating::fromCsv);
 
-        JavaPairRDD<String, Counterparty> counterpartyWithId = counterParty.mapToPair(cp -> new Tuple2<>(cp.getId(), cp));
+        JavaPairRDD<String, Counterparty> counterpartyWithId = counterParty.repartition(3).mapToPair(cp -> new Tuple2<>(cp.getId(), cp));
         JavaPairRDD<String, Iterable<Rating>> groupedratings = rating.groupBy(r -> r.getCounterpartyId());
 
         JavaPairRDD<String, Tuple2<Counterparty, org.apache.spark.api.java.Optional<Iterable<Rating>>>> cpCpmbinedWithRatings

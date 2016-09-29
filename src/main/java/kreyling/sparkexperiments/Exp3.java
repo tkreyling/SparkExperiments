@@ -12,7 +12,7 @@ import java.util.*;
 
 public class Exp3 {
 
-    public static final String RESOURCE_PATH = "./";
+    public static final String RESOURCE_PATH = "/Applications/mesos-1.0.1/share/";
 
     public static void main(String[] args) {
         SparkConf conf = new SparkConf()
