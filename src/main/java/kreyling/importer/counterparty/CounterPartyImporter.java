@@ -1,6 +1,5 @@
 package kreyling.importer.counterparty;
 
-import com.google.common.base.Optional;
 import kreyling.importer.counterparty.domain.Counterparty;
 import kreyling.importer.counterparty.domain.Rating;
 import org.apache.spark.SparkConf;
@@ -21,32 +20,40 @@ import java.util.Collections;
  */
 public class CounterPartyImporter {
 
+    public static final String RESOURCE_PATH = "./";
+
     public static void main(String[] args) {
 
-        SparkConf conf = new SparkConf().setAppName("CounterpartImporter").setMaster("local");
-        conf.set("spark.hadoop.validateOutputSpecs", "false");
+        SparkConf conf = new SparkConf()
+                .setAppName(CounterPartyImporter.class.getSimpleName())
+                .set("spark.hadoop.validateOutputSpecs", "false") // Overwrite output files
+                .set("spark.executor.uri", "http://10.89.0.96:8888/spark-2.0.0-bin-hadoop2.7.tgz"); //Download spark binaries from here
+
         JavaSparkContext sc = new JavaSparkContext(conf);
 
-        JavaRDD<Counterparty> counterParty = sc.textFile("src/main/resources/counterparty/counter-party.csv").map(Counterparty::fromCsv);
-        JavaRDD<Rating> rating = sc.textFile("src/main/resources/counterparty/rating.csv").map(Rating::fromCsv);
+        JavaRDD<Counterparty> counterParty = sc.textFile(RESOURCE_PATH +
+                "counter-party.csv").map(Counterparty::fromCsv);
+        JavaRDD<Rating> rating = sc.textFile(RESOURCE_PATH +
+                "rating.csv").map(Rating::fromCsv);
 
         JavaPairRDD<String, Counterparty> counterpartyWithId = counterParty.mapToPair(cp -> new Tuple2<>(cp.getId(), cp));
         JavaPairRDD<String, Iterable<Rating>> groupedratings = rating.groupBy(r -> r.getCounterpartyId());
 
-        JavaPairRDD<String, Tuple2<Counterparty, Optional<Iterable<Rating>>>> cpCpmbinedWithRatings = counterpartyWithId.
+        JavaPairRDD<String, Tuple2<Counterparty, org.apache.spark.api.java.Optional<Iterable<Rating>>>> cpCpmbinedWithRatings
+                = counterpartyWithId.
                 leftOuterJoin(groupedratings);
 
         JavaPairRDD<String, Counterparty> counterPartyWithRating = cpCpmbinedWithRatings
                 .mapValues(tuple -> Counterparty.enrichWithRating(tuple._1, tuple._2.or(Collections.EMPTY_LIST)));
 
-        counterPartyWithRating.map(t -> marshallToString(t._2)).saveAsTextFile("src/main/resources/counterparty/CIS.txt");
+        counterPartyWithRating.map(t -> marshallToString(t._2)).saveAsTextFile(RESOURCE_PATH + "CIS.txt");
         // .collect().forEach(System.out::println);
         sc.stop();
     }
 
     private static String marshallToString(Counterparty counterparty) {
         try {
-            JAXBContext jaxbContext = JAXBContext.newInstance(Counterparty.class,Rating.class);
+            JAXBContext jaxbContext = JAXBContext.newInstance(Counterparty.class, Rating.class);
             Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
             StringWriter sw = new StringWriter();
