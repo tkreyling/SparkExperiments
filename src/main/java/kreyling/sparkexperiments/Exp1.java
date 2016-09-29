@@ -72,9 +72,9 @@ public class Exp1 {
         SparkConf conf = new SparkConf().setAppName("Exp1").setMaster("local");
         JavaSparkContext sc = new JavaSparkContext(conf);
 
-        JavaRDD<Person> persons = sc.textFile("src/main/resources/persons.csv").map(Person::fromCsv);
-        JavaRDD<KnowledgeItem> knowledge = sc.textFile("src/main/resources/knowledge.csv").map(KnowledgeItem::fromCsv);
-        JavaRDD<String[]> interests = sc.textFile("src/main/resources/interests.csv").map(s -> s.split(","));
+        JavaRDD<Person> persons = sc.textFile("src/main/resources/kreyling/sparkexperiments/persons.csv").map(Person::fromCsv);
+        JavaRDD<KnowledgeItem> knowledge = sc.textFile("src/main/resources/kreyling/sparkexperiments/knowledge.csv").map(KnowledgeItem::fromCsv);
+        JavaRDD<String[]> interests = sc.textFile("src/main/resources/kreyling/sparkexperiments/interests.csv").map(s -> s.split(","));
 
         JavaPairRDD<Integer, Person> personsWithId = persons.mapToPair(p -> new Tuple2<>(p.id, p));
         JavaPairRDD<Integer, KnowledgeItem> knowledgeWithId = knowledge.mapToPair(k -> new Tuple2<>(k.personId, k));
