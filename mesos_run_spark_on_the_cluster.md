@@ -1,8 +1,8 @@
 # Step-by-Step guide to run Spark jobs on a Mesos cluster
-In this guide we are run i.e. start, stop and verify the Mesos cluster setup. Additionally in the end were a actually submitting spark jobs to the cluster.
+In this guide we are run i.e. start, stop and verify the Mesos cluster setup. Additionally in the end we are actually submitting spark jobs to the cluster.
 (Please note that we are using the directory structures and path setup from "Step-by-Step installation guide for a LAN Mesos cluster" guide.)
 
-For your SparExperiments and SparkScalaExperiments we setup a Mesos cluster where could submit jobs to. 
+For our SparExperiments and SparkScalaExperiments we setup a Mesos cluster where we could submit jobs to. 
 The cluster contained one master and three agents.
 As hardware base we used three MacBook Pro (MBP) with 8 GB / 16 GB RAM and 8 CPU Cores each.
 
