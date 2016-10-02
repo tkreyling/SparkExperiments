@@ -24,7 +24,7 @@ In case of ip-address based setup you have to ensure that each machine gets the 
 In case of hostnames you have to ensure that the hostnames are resolvable within your LAN. Either you have some service within your LAN to do that for your (we had that) or you have to assign the ip-addresses to hostnames in /etc/hosts on every machine as described in the original Mesos and Spark guides.
 
 ### Providing the Spark binary package
-To run a Spark job on an Mesos agent the agent needs the Spark executor binaries available on local storage. To provide the binaries on run time to the distributed agents we made them available via HTTP. As a web server we used MAMP and put the spark binaries from https://spark.apache.org/downloads.html (Spark 2.0.0, Pre-build for Hadoop 2.7 and later) in the htdocs root. So the other agents could reach to package via http://<ip-adress>:<webserver port>/spark-2.0.0-bin-hadoop2.7.tgz
+To run a Spark job on an Mesos agent the agent needs the Spark executor binaries available on local storage. To provide the binaries on run time to the distributed agents we made them available via HTTP. As a web server we used MAMP and put the spark binaries from https://spark.apache.org/downloads.html (Spark 2.0.0, Pre-build for Hadoop 2.7 and later) in the htdocs root. So the other agents could reach to package via http://ip-adress-or-hostname:webserver-port/spark-2.0.0-bin-hadoop2.7.tgz
 
 ### Install Spark 
 For the installation of Spark just extract the binary package you have just downloaded to a additional location of your choice. We copied the extracted files to ```/Applications/spark-2.0.0-bin-hadoop2.7```. 
