@@ -19,7 +19,10 @@ As an entry point we used the following guides:
 
 ## Prerequisites
 ### An comment on hostname vs. ip-address based setup
-We worked with both setups and both worked out well.
+The communication between Mesos master and agents is a standard client-server setup via port 5050 on the master and dynamic ports on agents. For this communication (and the provisioning of the Spark binary package - see below) you have to adress the machines. E.g. to submit a Spark job to the Mesos master you have to specify the master URL via ```--master``` parameter in the form ```mesos://<ip-address or hostname>:5050```. 
+
+The setup via hostnames or via ip-adress both worked out well.
+
 In case of ip-address based setup you have to ensure that each machine gets the same ip-address assigned every time. 
 In case of hostnames you have to ensure that the hostnames are resolvable within your LAN. Either you have some service within your LAN to do that for your (we had that) or you have to assign the ip-addresses to hostnames in /etc/hosts on every machine as described in the original Mesos and Spark guides.
 
