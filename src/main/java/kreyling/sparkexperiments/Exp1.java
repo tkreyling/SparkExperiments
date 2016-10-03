@@ -70,12 +70,9 @@ public class Exp1 {
 
         JavaSparkContext sc = new JavaSparkContext(conf);
 
-        JavaRDD<Person> persons = sc.textFile(RESOURCE_PATH +
-                "persons.csv").map(Person::fromCsv);
-        JavaRDD<KnowledgeItem> knowledge = sc.textFile(RESOURCE_PATH +
-                "knowledge.csv").map(KnowledgeItem::fromCsv);
-        JavaRDD<String[]> interests = sc.textFile(RESOURCE_PATH +
-                "interests.csv").map(s -> s.split(","));
+        JavaRDD<Person> persons = sc.textFile(RESOURCE_PATH + "persons.csv").map(Person::fromCsv);
+        JavaRDD<KnowledgeItem> knowledge = sc.textFile(RESOURCE_PATH + "knowledge.csv").map(KnowledgeItem::fromCsv);
+        JavaRDD<String[]> interests = sc.textFile(RESOURCE_PATH + "interests.csv").map(s -> s.split(","));
 
         JavaPairRDD<Integer, Person> personsWithId = persons.mapToPair(p -> new Tuple2<>(p.id, p));
         JavaPairRDD<Integer, KnowledgeItem> knowledgeWithId = knowledge.mapToPair(k -> new Tuple2<>(k.personId, k));
@@ -87,8 +84,7 @@ public class Exp1 {
         RDD<Tuple2<Integer, Person>> rdd = personsWithId.rdd();
         printRdd(rdd, "");
 
-        personsWithId.map(t -> t._2.toString()).saveAsTextFile(RESOURCE_PATH +
-                "persons.txt");
+        personsWithId.map(t -> t._2.toString()).saveAsTextFile(RESOURCE_PATH + "persons.txt");
         personsWithId.collect().forEach(System.out::println);
         long end = System.currentTimeMillis();
 
